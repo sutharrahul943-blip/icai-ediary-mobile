@@ -15,7 +15,7 @@ fullscreen = 0
 
 # Android permissions - INTERNET is required for the embedded WebView to
 # reach the ICAI portal.
-android.permissions = INTERNET
+android.permissions = INTERNET, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE
 
 android.api = 33
 android.minapi = 24
