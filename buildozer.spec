@@ -8,14 +8,14 @@ source.include_exts = py,png,jpg,kv,atlas
 
 version = 0.1
 
-requirements = python3==3.11.9,hostpython3==3.11.9,kivy==2.3.0,pyjnius,cryptography,android
+requirements = python3,kivy==2.3.0,pyjnius,android
 
 orientation = portrait
 fullscreen = 0
 
 # Android permissions - INTERNET is required for the embedded WebView to
 # reach the ICAI portal.
-android.permissions = INTERNET, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE
+android.permissions = INTERNET
 
 android.api = 33
 android.minapi = 24
