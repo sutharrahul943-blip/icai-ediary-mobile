@@ -1,3 +1,4 @@
+
 name: Build Android APK
 
 on:
@@ -20,21 +21,45 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip \
-            autoconf libtool pkg-config zlib1g-dev libncurses-dev cmake \
-            libffi-dev libssl-dev automake build-essential
+          sudo apt-get install -y \
+            git zip unzip openjdk-17-jdk python3-pip \
+            autoconf automake libtool libtool-bin libltdl-dev \
+            pkg-config zlib1g-dev libncurses-dev cmake \
+            libffi-dev libssl-dev build-essential \
+            libsqlite3-dev libbz2-dev libreadline-dev \
+            m4 gettext
+
+      - name: Cache buildozer global directory
+        uses: actions/cache@v4
+        with:
+          path: ~/.buildozer
+          key: buildozer-global-${{ hashFiles('buildozer.spec') }}
+
+      - name: Cache buildozer project directory
+        uses: actions/cache@v4
+        with:
+          path: .buildozer
+          key: buildozer-project-${{ hashFiles('buildozer.spec') }}
 
       - name: Install Buildozer and Cython
         run: |
           pip install --upgrade pip
-          pip install buildozer cython==0.29.33
+          pip install buildozer==1.5.0 cython==0.29.33
 
       - name: Build APK
         run: |
-          yes | buildozer android debug
+          yes | buildozer -v android debug
 
       - name: Upload the built APK
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: icai-ediary-apk
           path: bin/*.apk
+
+      - name: Upload full build log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: buildozer-log
+          path: .buildozer/**/*.log
