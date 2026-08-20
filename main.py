@@ -381,4 +381,37 @@ class EDiaryMobileApp(App):
 
 
 if __name__ == "__main__":
-    EDiaryMobileApp().run()
+    import traceback
+    import sys
+
+    def _write_crash_log(exc_text: str):
+        # Try a few locations in case one isn't writable on this device/Android version
+        candidates = [
+            "/sdcard/Download/ediary_crash_log.txt",
+            "/sdcard/ediary_crash_log.txt",
+        ]
+        try:
+            from kivy.app import App as _App
+            app = _App.get_running_app()
+            if app is not None:
+                candidates.insert(0, f"{app.user_data_dir}/ediary_crash_log.txt")
+        except Exception:
+            pass
+
+        for path in candidates:
+            try:
+                with open(path, "w") as f:
+                    f.write(exc_text)
+                print(f"[CRASH LOG WRITTEN TO] {path}")
+                return path
+            except Exception:
+                continue
+        return None
+
+    try:
+        EDiaryMobileApp().run()
+    except Exception:
+        crash_text = traceback.format_exc()
+        print(crash_text)
+        _write_crash_log(crash_text)
+        raise
