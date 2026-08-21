@@ -8,7 +8,7 @@ source.include_exts = py,png,jpg,kv,atlas
 
 version = 0.1
 
-requirements = python3==3.11,kivy==master,pyjnius,android
+requirements = python3==3.11,hostpython3==3.11,kivy==master,pyjnius,android
 
 orientation = portrait
 fullscreen = 0
